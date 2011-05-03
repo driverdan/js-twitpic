@@ -11,7 +11,7 @@ Simply include lib/TwitPic_API.min.js (or the full version) in a script tag on y
 **Object Instantiation**
 
 	var tp = new TwitPic();
-	tp.media.show({id: '3', function (image) {
+	tp.media.show({id: '3'}, function (image) {
 		document.getElementById('image').innerHTML = tp.thumb(image, 'mini');
 	});
 	
