@@ -52,6 +52,8 @@ API = {
     return true
         
   query: (url, data, callback) ->
+  	# Hopefully relying on the date should be reliable enough. Might need to look
+  	# as JSONP-Fu again to port over some collision avoidance code.
     callbackName = "TwitPic" + (new Date()).getTime()
     queryUrl = TwitPic.baseUrl + url + ".jsonp?callback=" + callbackName
     
