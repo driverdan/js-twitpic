@@ -29,7 +29,7 @@ class TwitPic
     
     for own endpoint, requiredArgs of endpoints
       api = endpoint.split "/"
-      this[api[0]] = {}
+      this[api[0]] = {} if !this[api[0]]
       this[api[0]][api[1]] = ((endpoint, requiredArgs) ->
         (args, callback) ->
           API.query("2/#{endpoint}", args, callback) if API.validate(requiredArgs)
@@ -70,7 +70,7 @@ API = {
       head.removeChild(script)
     
     window[callbackName] = (data) ->
-      callback(data)
+      callback.call(new TwitPic(), data)
       
     head.appendChild(script)
         
