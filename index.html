@@ -1,34 +1,33 @@
 <html lang="en">
 <head>
 	<title>TwitPic Javascript API Examples</title>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://cdn.meltingice.net/js/syntaxhighlighter/shCore.js"></script>
 	<script type="text/javascript" src="http://cdn.meltingice.net/js/syntaxhighlighter/shBrushJScript.js"></script>
 	<link type="text/css" rel="stylesheet" href="http://cdn.meltingice.net/js/syntaxhighlighter/styles/shCore.css" />
 	<link type="text/css" rel="stylesheet" href="http://cdn.meltingice.net/js/syntaxhighlighter/styles/shThemeDefault.css" />
 	
-	<script type="text/javascript" src="http://github.com/meltingice/TwitPic-API-for-Javascript/raw/master/TwitPic_API.min.js"></script>
+	<script type="text/javascript" src="https://github.com/meltingice/TwitPic-API-for-Javascript/raw/master/lib/twitpic.min.js"></script>
 	
 	<script type="text/javascript">
 	SyntaxHighlighter.all()
 	
-	twitpic.ready(function() {
-		twitpic.media.show({'id':'28ymi7'}, function(media) {
-			$("#media_show").html('<img src="http://twitpic.com/show/thumb/'+media.short_id+'" />');
-		});
-		
-		twitpic.users.show({'username':'meltingice'}, function(user) {
-			for(var i=0; i < 5; i++) {
-				$("#users_show").append('<img src="http://twitpic.com/show/thumb/'+user.images[i].short_id+'" />&nbsp;')
-			}
-		});
-		
-		twitpic.tags.show({'tag':'weather'}, function(tags) {
-			for(var i=0; i < 5; i++) {
-				$("#tags_show").append('<img src="http://twitpic.com/show/thumb/'+tags.images[i].short_id+'" />&nbsp;')
-			}
-		});
-	});
+	var twitpic = new TwitPic();
+  twitpic.media.show({'id':'28ymi7'}, function (media) {
+    $("#media_show").html(twitpic.thumb(media, 'thumb') + "&nbsp;");
+  });
+  
+  twitpic.users.show({'username':'meltingice'}, function (user) {
+    for(var i=0; i < 5; i++) {
+    	$("#users_show").append(twitpic.thumb(user.images[i], 'thumb') + "&nbsp;");
+    }
+  });
+  
+  twitpic.tags.show({'tag':'fromspace'}, function (tags) {
+    for(var i=0; i < 5; i++) {
+    	$("#tags_show").append(twitpic.thumb(tags.images[i], 'thumb') + "&nbsp;");
+    }
+  });
 	</script>
 </head>
 <body>
@@ -36,11 +35,9 @@
 
 <h2>media/show</h2>
 <pre class="brush: js">
-// using twitpic.ready() is only required if you do not have jQuery already included in the page
-twitpic.ready(function() {
-	twitpic.media.show({'id':'28ymi7'}, function(media) {
-		$("#media_show").html('&lt;img src="http://twitpic.com/show/thumb/'+media.short_id+'" /&gt;');
-	});
+var twitpic = new TwitPic();
+twitpic.media.show({'id':'28ymi7'}, function (media) {
+  $("#media_show").html(twitpic.thumb(media, 'thumb') + "&nbsp;");
 });
 </pre>
 
@@ -50,10 +47,11 @@ twitpic.ready(function() {
 
 <h2>users/show</h2>
 <pre class="brush: js">
-twitpic.users.show({'username':'meltingice'}, function(user) {
-	for(var i=0; i &lt; 5; i++) {
-		$("#users_show").append('&lt;img src="http://twitpic.com/show/thumb/'+user.images[i].short_id+'" /&gt;&nbsp;')
-	}
+var twitpic = new TwitPic();
+twitpic.users.show({'username':'meltingice'}, function (user) {
+  for(var i=0; i &lt; 5; i++) {
+    $("#users_show").append(twitpic.thumb(user.images[i], 'thumb') + "&nbsp;");
+  }
 });
 </pre>
 
@@ -63,10 +61,11 @@ twitpic.users.show({'username':'meltingice'}, function(user) {
 
 <h2>tags/show</h2>
 <pre class="brush: js">
-twitpic.tags.show({'tag':'weather'}, function(tags) {
-	for(var i=0; i &lt; 5; i++) {
-		$("#tags_show").append('&lt;img src="http://twitpic.com/show/thumb/'+tags.images[i].short_id+'" /&gt;&nbsp;')
-	}
+var twitpic = new TwitPic();
+twitpic.tags.show({'tag':'fromspace'}, function (tags) {
+  for(var i=0; i &lt; 5; i++) {
+    $("#tags_show").append(twitpic.thumb(tags.images[i], 'thumb') + "&nbsp;");
+  }
 });
 </pre>
 
