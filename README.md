@@ -14,9 +14,9 @@ This library is also compatible with NodeJS. The NodeJS version has support for 
 
 # Example Usage
 
-Simply include lib/twitpic.min.js (or the full version) in a script tag on your webpage to load the TwitPic API library.
-
 ## In-Browser Usage
+
+Simply include lib/twitpic.min.js (or the full version) in a script tag on your webpage to load the TwitPic API library.
 
 There are two separate ways you can query the API:
 
@@ -83,6 +83,11 @@ tp.config(function (config) {
 tp.comments.create({media_id: "abc123", message: "BOOM!"}, function (data) {
   console.log(data);
 });
+
+// Upload a photo and post a tweet
+tp.uploadAndPost({path: "./test.jpg", message: "Uploading from Node :)"}, function (data) {
+  console.log(data);
+});
 ```
 	
 # Supported API Endpoints
@@ -103,8 +108,8 @@ See the [official TwitPic API docs](http://dev.twitpic.com/docs) for more inform
 
 **Write-Enabled Endpoints**
 
-TODO: add upload methods
-
+* upload
+* uploadAndPost
 * comments/create
 * comments/delete
 * faces/create

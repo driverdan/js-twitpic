@@ -1,5 +1,7 @@
 if exports?
+  fs          = require('fs')
   http        = require('http')
+  mime        = require('mime')
   querystring = require('querystring')
   OAuth       = require('oauth').OAuth
 
@@ -78,7 +80,7 @@ class TwitPic
         this[api[0]] = {} if !this[api[0]]
         this[api[0]][api[1]] = ((endpoint, requiredArgs) ->
           (args, callback) ->
-            throw "#{endpoint} requires an API key and OAuth credentials" if self.readOnly
+            throw "/#{endpoint} requires an API key and OAuth credentials" if self.readOnly
             API.postQuery("2/#{endpoint}", self.creds, args, callback) if API.validate(args, requiredArgs)
         )(endpoint, requiredArgs)
     
@@ -93,11 +95,42 @@ class TwitPic
     @readOnly = false
     this.creds = conf
     
-  upload: (file, message) ->
-    # Do stuff
+  upload: (opts, callback) ->
+    throw "/upload requires an API key and OAuth credentials" if @readOnly
     
-  uploadAndPost: (file, message) ->
-    # Do stuff
+    # Load the contents of the file into a string
+    mimeType = mime.lookup(opts.path)
+    opts.media = "data:#{mimeType};base64," + fs.readFileSync(opts.path, 'base64')
+    delete opts.path
+    
+    # Empty default message
+    opts.message = "" if opts.message is null
+    
+    # Make the query
+    API.postQuery("2/upload", this.creds, opts, callback)
+    
+  uploadAndPost: (opts, callback) ->
+    creds = this.creds
+    
+    this.upload(opts, (data) ->
+      # Image was posted, prepare to tweet
+      tweet = "#{opts.message} #{data.url}"
+      
+      oa = new OAuth(
+        "http://twitter.com/oauth/request_token",
+        "http://twitter.com/oauth/access_token", 
+        creds.consumerKey, creds.consumerSecret,
+        "1.0A", null, "HMAC-SHA1"
+      )
+     
+      oa.post(
+        "http://api.twitter.com/1/statuses/update.json",
+        creds.oauthToken, creds.oauthSecret,
+        {"status": tweet},
+        (error, data2) ->
+          callback.call(new TwitPic(), data)
+      )
+    )     
   
 ###
 API object that acts as a helper for the TwitPic class
@@ -188,14 +221,6 @@ API = {
     # Build the POST body
     postBody = querystring.stringify(data)
     
-    # Build the OAuth helper
-    oa = new OAuth(
-      "https://twitter.com/oauth/request_token",
-      "https://twitter.com/oauth/access_token",
-      creds.consumerKey, creds.consumerSecret,
-      "1.0A", null, "HMAC-SHA1"
-    )
-    
     # Build the custom headers
     headers = {
       "Host": "api.twitpic.com"
@@ -203,16 +228,14 @@ API = {
       "Accept": "*/*"
       "Content-Type": "application/x-www-form-urlencoded"
       "Content-Length": postBody.length
-      "X-Verify-Credentials-Authorization": this.buildHeader(oa, creds)
+      "X-Verify-Credentials-Authorization": this.buildHeader(creds)
     }
     
     # Create the HTTP client
     client = http.createClient(80, TwitPic.baseUrl)
     req = client.request("POST", "/#{url}.json", headers)
     
-    req.on("response", (resp) ->
-      resp.setEncoding('utf8')
-      
+    req.on("response", (resp) ->      
       body = ""
       resp.on("data", (data) ->
         body += data
@@ -234,7 +257,15 @@ API = {
     req.write(postBody)
     req.end()
     
-  buildHeader: (oa, creds) ->
+  buildHeader: (creds) ->
+    # Build the OAuth helper
+    oa = new OAuth(
+      "https://twitter.com/oauth/request_token",
+      "https://twitter.com/oauth/access_token",
+      creds.consumerKey, creds.consumerSecret,
+      "1.0A", null, "HMAC-SHA1"
+    )
+    
     # Create the OAuth params
     params = {
       "oauth_timestamp":        oa._getTimestamp()
@@ -258,8 +289,9 @@ API = {
     # Create the actual header
     header = 'OAuth realm="http://api.twitter.com/"'
     for own name, value of params
+      continue if name == "media"
       header += ", " + encodeURIComponent(name) + '="' + encodeURIComponent(value) + '"'
-      
+    
     return header
 }
 
