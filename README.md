@@ -1,12 +1,12 @@
 # About
 
-The TwitPic object provides read-only access in the browser, and full access in NodeJS, to the TwitPic API.
+The TwitPic object provides read-only access in the browser, and full access (including photo uploads) in NodeJS, to the TwitPic API.
 
 This library is no longer dependent on jQuery, and is now written in Coffeescript.
 
 ## NodeJS
 
-This library is also compatible with NodeJS. The NodeJS version has support for write-enabled API methods using OAuth Echo.
+The NodeJS version has support for write-enabled API methods using OAuth Echo.
 
 **Install with npm**
 
