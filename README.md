@@ -6,7 +6,7 @@ This library is no longer dependent on jQuery, and is now written in Coffeescrip
 
 ## NodeJS
 
-The NodeJS version has support for write-enabled API methods using OAuth Echo.
+The NodeJS version has support for write-enabled API methods using OAuth Echo (requires node-oauth library).
 
 **Install with npm**
 
