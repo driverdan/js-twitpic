@@ -1,9 +1,9 @@
 {
   "name": "twitpic",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Library for querying the full TwitPic API including photo uploads",
   "keywords": ["twitpic", "API", "query", "client", "images", "photos", "upload"],
-  "homepage": "https://github.com/meltingice/TwitPic-API-for-Javascript",
+  "homepage": "https://github.com/meltingice/js-twitpic",
   "author": {
     "name": "Ryan LeFevre",
     "email": "ryan@twitpic.com",
@@ -12,7 +12,7 @@
   "main": "./lib/twitpic.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/meltingice/TwitPic-API-for-Javascript.git"
+    "url": "https://github.com/meltingice/js-twitpic.git"
   },
   "dependencies": {
     "oauth": "*",
